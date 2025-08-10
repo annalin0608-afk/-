@@ -1,0 +1,287 @@
+:root {
+  --color-dashi: #55767B;
+  --color-blood: #E9D1B5;
+  --color-fat: #F5F2E9;
+  --color-water: #5AA4AE;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fat);
+  color: var(--color-dashi);
+  min-height: 100vh;
+}
+
+html, body, h1, h2, h3, h4, h5, h6, p, a, button, ul, li, div, span {
+  font-family: 'Han-YuanKai', '王漢宗顏楷體', serif !important;
+  letter-spacing: 0.03em;
+}
+
+.site-title-wrap {
+  text-align: center;
+  padding: 42px 0 18px 0;
+}
+.site-title {
+  font-size: 2.5em;
+  color: var(--color-dashi);
+  letter-spacing: 0.05em;
+  margin: 0;
+  font-weight: normal;
+  background: var(--color-blood);
+  display: inline-block;
+  padding: 0.2em 1.2em;
+  border-radius: 0.7em;
+  box-shadow: 0 2px 12px rgba(85, 118, 123, 0.11);
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 60vh;
+}
+
+.map-container {
+  position: relative;
+  display: inline-block;
+  background: var(--color-blood);
+  border-radius: 1.5em;
+  box-shadow: 0 6px 32px rgba(85, 118, 123, 0.15);
+  padding: 0;
+}
+
+.map-bg {
+  display: block;
+  max-width: 90vw;
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  border-radius: 1.5em;
+  object-fit: contain;
+}
+
+#map-points {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.map-point {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2;
+  /* 讓圖標在座標點中心 */
+  transform: translate(-50%, -100%);
+  transition: transform 0.22s;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: none;
+  border: none;
+}
+.map-point:hover {
+  transform: translate(-50%, -110%) scale(1.08);
+}
+.marker-icon {
+  width: 48px;
+  height: 48px;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(90,164,174,0.09));
+}
+
+#menu-btn {
+  position: fixed;
+  top: 22px; left: 22px;
+  z-index: 100;
+  background: var(--color-dashi);
+  border: none;
+  border-radius: 8px;
+  width: 44px; height: 44px;
+  box-shadow: 0 2px 8px rgba(85,118,123,0.18);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#menu-btn span {
+  display: block;
+  width: 26px;
+  height: 4px;
+  margin: 4px 0;
+  background: var(--color-fat);
+  border-radius: 2px;
+  transition: all 0.25s;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 310px;
+  height: 100vh;
+  background: var(--color-blood);
+  box-shadow: 2px 0 16px rgba(85,118,123,0.12);
+  transform: translateX(-105%);
+  transition: transform 0.35s cubic-bezier(.68,-0.55,.27,1.55);
+  z-index: 200;
+  padding: 0;
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar-content {
+  padding: 32px 28px 20px 28px;
+}
+.sidebar-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar-item {
+  padding: 16px 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--color-dashi);
+  font-size: 1.1em;
+  border-bottom: 1px solid var(--color-water);
+  transition: background 0.2s;
+}
+.sidebar-item:hover {
+  background: var(--color-water);
+  color: var(--color-fat);
+}
+
+#sidebar-popups {
+  position: fixed;
+  left: 0; top: 0;
+  width: 340px;
+  z-index: 300;
+  pointer-events: none;
+}
+.sidebar-popup {
+  display: none;
+  pointer-events: auto;
+  background: var(--color-fat);
+  box-shadow: 2px 0 18px rgba(85,118,123,0.15);
+  padding: 30px 30px 24px 30px;
+  border-radius: 0 0 18px 0;
+  border-left: 8px solid var(--color-water);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+}
+.sidebar-popup.active {
+  display: block;
+  animation: popup-slide .38s cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes popup-slide {
+  from { opacity: 0; transform: translateY(-30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+.close-popup {
+  position: absolute;
+  top: 16px; right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: var(--color-dashi);
+  cursor: pointer;
+}
+
+.author-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 12px;
+}
+.author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-blood);
+  border-radius: 10px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 8px rgba(85,118,123,0.08);
+}
+.author img {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-water);
+}
+
+@media (max-width: 600px) {
+  .site-title-wrap {
+    padding: 22px 0 10px 0;
+  }
+  .site-title {
+    font-size: 1.35em;
+    padding: 0.1em 0.8em;
+  }
+  .map-bg {
+    max-width: 98vw;
+    max-height: 68vw;
+  }
+  .sidebar, #sidebar-popups {
+    width: 95vw;
+    min-width: 0;
+    font-size: 0.98em;
+  }
+  .sidebar-popup {
+    width: 100%;
+    padding: 18px 10px 14px 16px;
+  }
+  #menu-btn {
+    width: 38px; height: 38px;
+  }
+  #menu-btn span {
+    width: 20px; height: 3px;
+  }
+}
+.tippy-box[data-theme~='chinatown'] {
+  font-family: 'Han-YuanKai', '王漢宗顏楷體', serif;
+  background: rgba(40, 55, 50, 0.95);
+  color: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(85, 118, 123, 0.22);
+  padding: 20px 30px;
+  max-width: 340px;
+  letter-spacing: 0.04em;
+}
+.tippy-box[data-theme~='chinatown'] .tippy-content {
+  font-size: 1.14em;
+  line-height: 1.9;
+}
+.tippy-box[data-theme~='chinatown'] strong {
+  display: block;
+  font-size: 1.15em;
+  margin-bottom: 0.5em;
+  color: #E9D1B5;
+  font-weight: normal;
+  letter-spacing: 0.06em;
+}
+.tippy-box[data-theme~='chinatown'] .tippy-arrow {
+  color: rgba(40, 55, 50, 0.95);
+}
+
+/* 返回鍵（關閉側欄） */
+.sidebar-back{
+  display:inline-block;
+  margin: 10px 0 16px 0;
+  padding: 10px 14px;
+  background: var(--color-dashi);
+  color: var(--color-fat);
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(85,118,123,0.18);
+}
+.sidebar-back:hover{
+  background: var(--color-water);
+  color: var(--color-fat);
+}

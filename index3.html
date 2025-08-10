@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>舊金山唐人街互動地圖</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/justfont/han.ttf/han-yuan-kai.min.css" />
+</head>
+<body>
+  <!-- Hamburger menu button -->
+  <button id="menu-btn" aria-label="打開導覽選單">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Slideout sidebar -->
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <ul>
+        <li class="sidebar-item" data-section="about">關於我們</li>
+        <li class="sidebar-item" data-section="origin">計畫緣起</li>
+        <li class="sidebar-item" data-section="plan">青年百億圓夢計畫</li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidebar popup panels -->
+  <div id="sidebar-popups">
+    <div class="sidebar-popup" data-section="about">
+      <button class="close-popup">&times;</button>
+      <h2>關於我們</h2>
+      <div class="author-list">
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="作者A">
+          <div>
+            <strong>王大明</strong><br>
+            負責：網站程式設計<br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="作者B">
+          <div>
+            <strong>陳小美</strong><br>
+            負責：地圖插畫設計<br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/men/13.jpg" alt="作者C">
+          <div>
+            <strong>李偉</strong><br>
+            負責：資料蒐集與撰稿<br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/women/14.jpg" alt="作者D">
+          <div>
+            <strong>張雅婷</strong><br>
+            負責：內容審核與校稿<br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-popup" data-section="origin">
+      <button class="close-popup">&times;</button>
+      <h2>計畫緣起</h2>
+      <p>本網站旨在透過數位互動地圖，讓更多人了解舊金山唐人街的歷史與文化故事。希望以創新方式推動文化保存與青年參與。</p>
+    </div>
+    <div class="sidebar-popup" data-section="plan">
+      <button class="close-popup">&times;</button>
+      <h2>青年百億圓夢計畫</h2>
+      <p>本網站獲得「青年百億圓夢計畫」補助，鼓勵青年以創意推動地方文化保存，結合科技與人文，創造更多元的文化參與機會。</p>
+    </div>
+  </div>
+
+  <!-- 主標題 -->
+  <header class="site-title-wrap">
+    <h1 class="site-title">舊金山唐人街</h1>
+  </header>
+
+  <!-- 地圖區 -->
+  <main>
+    <div class="map-container">
+      <img src="chinatown-map.png" alt="舊金山唐人街地圖底圖" class="map-bg" id="map-bg"/>
+      <div id="map-points"></div>
+    </div>
+  </main>
+
+  <!-- JSON 載入失敗時的備援資料（可刪） -->
+  <script>
+    window.POINTS_FALLBACK = [
+      {
+        title: "Ross Alley 呂宋巷",
+        left: 45,
+        top: 35,
+        href: "ross-alley.html",
+        tooltip: "<strong>Ross Alley 呂宋巷</strong> 早年充滿幫派、賭博與革命氣息，如今是文化地標。"
+      }
+    ];
+  </script>
+
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <script src="script.js"></script>
+</body>
+</html>

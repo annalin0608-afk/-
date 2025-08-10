@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>地圖座標百分比小工具</title>
+<style>
+:root{
+  --dashi:#55767B; --blood:#E9D1B5; --fat:#F5F2E9; --water:#5AA4AE;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',Arial,sans-serif;background:var(--fat);color:var(--dashi)}
+header{padding:18px 20px 8px;background:var(--blood);border-bottom:6px solid var(--water)}
+h1{margin:0 0 6px;font-size:1.35rem}
+main{max-width:1080px;margin:16px auto;padding:0 16px 24px}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+button{border:0;padding:8px 12px;border-radius:8px;background:var(--dashi);color:var(--fat);cursor:pointer}
+button:hover{background:var(--water)}
+.canvas-wrap{background:var(--blood);border-radius:16px;padding:8px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+.img-stage{position:relative;overflow:hidden;border-radius:12px}
+#mapImg{display:block;width:100%;height:auto}
+.marker{position:absolute;transform:translate(-50%,-100%);pointer-events:none}
+.marker img{width:36px;height:36px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.18))}
+.readout{display:grid;gap:10px;margin-top:14px}
+.readout .row{display:flex;gap:18px;font-weight:600}
+.snippet{position:relative;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:10px 12px 12px}
+.snip-title{font-weight:700;margin-bottom:6px}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.copy{position:absolute;right:10px;top:8px;padding:6px 8px;font-size:.85rem}
+footer{text-align:center;padding:8px 12px 18px;color:#6b7b7f}
+</style>
+</head>
+<body>
+<header>
+  <h1>地圖座標百分比小工具</h1>
+  <p>在圖片上點一下，下面會顯示 <code>left%</code>、<code>top%</code>，並提供可複製片段。</p>
+</header>
+
+<main>
+  <section class="controls">
+    <label>重新選擇圖片：<input type="file" id="fileInput" accept="image/*"></label>
+    <button id="useDefault">使用預設地圖 (chinatown-map.png)</button>
+    <button id="clear">清除標記</button>
+  </section>
+
+  <section class="canvas-wrap">
+    <div class="img-stage" id="stage">
+      <!-- 若同資料夾有 chinatown-map.png，按上面的「使用預設」會載入 -->
+      <img id="mapImg" alt="地圖/圖片（尚未載入）">
+      <div id="marker" class="marker" hidden>
+        <img src="marker-icon.png" alt="標記">
+      </div>
+    </div>
+  </section>
+
+  <section class="readout">
+    <div class="row">
+      <div>left%：<span id="leftVal">—</span></div>
+      <div>top%：<span id="topVal">—</span></div>
+    </div>
+
+    <div class="snippet">
+      <div class="snip-title">CSS 片段</div>
+      <pre id="cssOut">left: 0%; top: 0%;</pre>
+      <button class="copy" data-target="cssOut">複製</button>
+    </div>
+
+    <div class="snippet">
+      <div class="snip-title">JSON 片段（只有座標）</div>
+      <pre id="jsonOut">{ "left": 0, "top": 0 }</pre>
+      <button class="copy" data-target="jsonOut">複製</button>
+    </div>
+
+    <div class="snippet">
+      <div class="snip-title">完整 points.json 範例</div>
+      <pre id="objOut">{
+  "title": "地點名稱",
+  "left": 0,
+  "top": 0,
+  "href": "page.html",
+  "tooltip": "&lt;strong&gt;標題&lt;/strong&gt; 說明文字"
+}</pre>
+      <button class="copy" data-target="objOut">複製</button>
+    </div>
+  </section>
+</main>
+
+<footer><small>小技巧：標記出現後可用方向鍵微調（每次 0.1%，按住 Shift 為 1%）。</small></footer>
+
+<script>
+(function(){
+  const img = document.getElementById('mapImg');
+  const marker = document.getElementById('marker');
+  const stage = document.getElementById('stage');
+  const leftVal = document.getElementById('leftVal');
+  const topVal = document.getElementById('topVal');
+  const cssOut = document.getElementById('cssOut');
+  const jsonOut = document.getElementById('jsonOut');
+  const objOut = document.getElementById('objOut');
+  const clearBtn = document.getElementById('clear');
+  const useDefault = document.getElementById('useDefault');
+  const fileInput = document.getElementById('fileInput');
+
+  function setOutputs(leftPct, topPct) {
+    const l = leftPct.toFixed(2), t = topPct.toFixed(2);
+    leftVal.textContent = l + '%';
+    topVal.textContent  = t + '%';
+    cssOut.textContent  = `left: ${l}%; top: ${t}%;`;
+    jsonOut.textContent = `{ "left": ${Number(l)}, "top": ${Number(t)} }`;
+    objOut.textContent  = `{
+  "title": "地點名稱",
+  "left": ${Number(l)},
+  "top": ${Number(t)},
+  "href": "page.html",
+  "tooltip": "<strong>標題</strong> 說明文字"
+}`;
+  }
+
+  function placeMarkerFromClient(xClient, yClient){
+    const rect = img.getBoundingClientRect();
+    const x = xClient - rect.left;
+    const y = yClient - rect.top;
+    const leftPct = (x / rect.width) * 100;
+    const topPct  = (y / rect.height) * 100;
+    marker.style.left = leftPct + '%';
+    marker.style.top  = topPct  + '%';
+    marker.hidden = false;
+    setOutputs(leftPct, topPct);
+  }
+
+  // 點擊圖片放標記
+  stage.addEventListener('click', (e) => {
+    if (e.target === img || e.target === stage) {
+      placeMarkerFromClient(e.clientX, e.clientY);
+    }
+  });
+
+  // 方向鍵微調（0.1% / Shift: 1%）
+  window.addEventListener('keydown', (e) => {
+    if (marker.hidden) return;
+    let l = parseFloat(marker.style.left) || 0;
+    let t = parseFloat(marker.style.top)  || 0;
+    const step = e.shiftKey ? 1 : 0.1;
+    let used = true;
+    if (e.key === 'ArrowLeft')  l -= step;
+    else if (e.key === 'ArrowRight') l += step;
+    else if (e.key === 'ArrowUp')    t -= step;
+    else if (e.key === 'ArrowDown')  t += step;
+    else used = false;
+    if (used) {
+      e.preventDefault();
+      l = Math.max(0, Math.min(100, l));
+      t = Math.max(0, Math.min(100, t));
+      marker.style.left = l + '%';
+      marker.style.top  = t + '%';
+      setOutputs(l, t);
+    }
+  });
+
+  // 複製按鈕
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-target');
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(()=>{
+        const old = btn.textContent;
+        btn.textContent = '已複製';
+        setTimeout(()=>btn.textContent = old, 1200);
+      });
+    });
+  });
+
+  // 清除
+  clearBtn.addEventListener('click', ()=>{
+    marker.hidden = true;
+    leftVal.textContent = topVal.textContent = '—';
+    cssOut.textContent = 'left: 0%; top: 0%;';
+    jsonOut.textContent = '{ "left": 0, "top": 0 }';
+    objOut.textContent = `{
+  "title": "地點名稱",
+  "left": 0,
+  "top": 0,
+  "href": "page.html",
+  "tooltip": "<strong>標題</strong> 說明文字"
+}`;
+  });
+
+  // 載入預設圖
+  useDefault.addEventListener('click', ()=>{ img.src = 'chinatown-map.png'; });
+
+  // 載入自選圖
+  fileInput.addEventListener('change', (e)=>{
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { img.src = ev.target.result; };
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>舊金山唐人街互動地圖</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/justfont/han.ttf/han-yuan-kai.min.css" />
+</head>
+<body>
+  <!-- Hamburger menu button -->
+  <button id="menu-btn" aria-label="打開導覽選單">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Slideout sidebar -->
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+      <button id="sidebar-back" class="sidebar-back" aria-label="關閉側欄">←</button>
+      <ul>
+        <li class="sidebar-item" data-section="about">關於我們</li>
+        <li class="sidebar-item" data-section="origin">計畫緣起</li>
+        <li class="sidebar-item" data-section="plan">青年百億圓夢計畫</li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Sidebar popup panels -->
+  <div id="sidebar-popups">
+    <div class="sidebar-popup" data-section="about">
+      <button class="close-popup">&times;</button>
+      <h2>關於我們</h2>
+      <div class="author-list">
+        <div class="author">
+          <img src="林品妍.jpg" alt="作者A">
+          <div>
+            <strong>林品妍</strong><br>
+            負責：網站程式設計、地圖插畫設計<br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/men/13.jpg" alt="作者B">
+          <div>
+            <strong>陳姿妤</strong><br>
+            負責：撰寫文稿：中華會館、中國國民黨駐舊金山總支部、報社 <br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="李昀蒨.jpg" alt="作者C">
+          <div>
+            <strong>李昀倩</strong><br>
+            負責：撰寫文稿：龍門、孔子學院 <br>
+          </div>
+        </div>
+        <div class="author">
+          <img src="https://randomuser.me/api/portraits/women/14.jpg" alt="作者D">
+          <div>
+            <strong>梁瑀恩</strong><br>
+            負責：撰寫文稿：ross alley、 合勝堂、SFO<br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-popup" data-section="origin">
+      <button class="close-popup">&times;</button>
+      <h2>計畫緣起</h2>
+      <p>本網站為一群青年百億海外圓夢計畫的錄取者所建。在參訪舊金山唐人街的過程中，深深的被其背後的歷史所吸引，因此希望透過數位互動地圖，讓更多人了解舊金山唐人街與華人在美的歷史與文化故事。</p>
+    </div>
+
+    <div class="sidebar-popup" data-section="plan">
+      <button class="close-popup">&times;</button>
+      <h2>青年百億圓夢計畫</h2>
+      <p><strong><br>夢，你來做 台，國家來搭</strong></br></p>
+<p>青年百億海外圓夢基金計畫期盼以拓展國際鏈結交流、青年帶動百工百業創新成長、引領青年多元創意行動為推動重點，讓臺灣青年在國際舞臺上展現創造力、活力與韌性，提升臺灣青年國際競爭力，也讓世界看見臺灣青年的多元力量。
+本計畫針對的對象為15至30歲青年，分為築夢工場組與海外翱翔組(含年度旗艦計畫)。</p>
+ <p>
+    <a href="https://twpathfinder.org" target="_blank" rel="noopener noreferrer">
+      青年百億海外圓夢計畫 官方網站
+    </a>
+  </p>
+    </div>
+  </div>
+
+  <!-- 主標題 -->
+  <header class="site-title-wrap">
+    <h1 class="site-title">舊金山唐人街</h1>
+  </header>
+
+  <!-- 地圖區 -->
+  <main>
+    <div class="map-container">
+      <img src="chinatown-map.png" alt="舊金山唐人街地圖底圖" class="map-bg" id="map-bg"/>
+      <div id="map-points"></div>
+    </div>
+  </main>
+
+  <!-- JSON 載入失敗時的備援資料（可刪） -->
+  <script>
+    window.POINTS_FALLBACK = [
+      {
+        title: "Ross Alley 呂宋巷",
+        left: 45,
+        top: 35,
+        href: "ross-alley.html",
+        tooltip: "<strong>Ross Alley 呂宋巷</strong> 這裡曾是充滿幫派、賭博與革命氣息的隱蔽之地，如今則蛻變為一個充滿藝術、歷史與觀光活力的文化地標。透過羅斯巷的百年演變，我們得以一窺舊金山華人移民社群的奮鬥、掙扎與適應，並感受歷史在城市中留下的深刻印記。"
+      }
+    ];
+  </script>
+
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/tippy.js@6"></script>
+  <script src="script.js"></script>
+</body>
+</html>
